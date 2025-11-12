@@ -34,6 +34,11 @@ jobs:
         run: |
           pip install awsebcli
       
+      - name: Initialize EB CLI
+        working-directory: ./backend
+        run: |
+          eb init family-budget-tracker --platform "python-3.9" --region us-east-1
+      
       - name: Deploy Backend to Production
         working-directory: ./backend
         run: |
