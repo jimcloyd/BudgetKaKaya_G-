@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import Footer from '../components/Footer'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -86,6 +87,7 @@ const LoginPage = () => {
           Don't have an account? <Link to="/register" className="text-blue-600">Register</Link>
         </p>
       </div>
+      <Footer />
     </div>
   )
 }

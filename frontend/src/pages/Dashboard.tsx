@@ -7,6 +7,7 @@ import IncomeVsExpensesChart from '../components/dashboard/IncomeVsExpensesChart
 import BudgetStatusSummary from '../components/dashboard/BudgetStatusSummary'
 import RecentExpensesList from '../components/dashboard/RecentExpensesList'
 import UpcomingInstallments from '../components/dashboard/UpcomingInstallments'
+import Footer from '../components/Footer'
 
 const Dashboard = () => {
   const { user, logout } = useAuth()
@@ -100,6 +101,7 @@ const Dashboard = () => {
           </>
         )}
       </main>
+      <Footer />
     </div>
   )
 }
