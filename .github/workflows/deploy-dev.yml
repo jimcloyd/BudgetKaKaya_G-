@@ -1,0 +1,57 @@
+name: Deploy to Development
+
+on:
+  push:
+    branches:
+      - Dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Install EB CLI
+        run: |
+          pip install awsebcli
+      
+      - name: Deploy Backend to Dev
+        working-directory: ./backend
+        run: |
+          eb use dev-env
+          eb deploy dev-env --staged
+      
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build
+        env:
+          VITE_API_BASE_URL: http://dev-env.eba-c96q7mdn.us-east-1.elasticbeanstalk.com/api
+      
+      - name: Deploy Frontend to S3
+        run: |
+          aws s3 sync frontend/dist/ s3://budget-tracker-dev-${{ secrets.DEV_BUCKET_SUFFIX }} --delete
+      
+      - name: Notify Success
+        if: success()
+        run: echo "✅ Deployed to Development successfully!"
